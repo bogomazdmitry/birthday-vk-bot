@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "DB";
+}
+@using Microsoft.AspNetCore.Http.Extensions
+@using BirthdayVkBot
+
+@model (List<BirthDayVk>, string)
+
+
+<div class="form-group">
+    <label>Birthday text</label>
+    <textarea class="form-control" autocomplete="off" rows="3" type="text" id="text-birthday">@Model.Item2</textarea>
+</div>
+<div class="btn-group">
+    <button class="btn btn-success" onclick="SaveTextChanges()">Save text</button>
+    <button class="btn btn-danger" onclick="UndoTextChanges()">Undo</button>
+</div>
+<hr />
+
+<label>New member or conversation:</label>
+<input type="number" id="text-new-member" required name="newMembers" />
+<button class="btn btn-primary" type="submit" onclick="AddMember()"> Add</button>
+<hr />
+
+<table class="table table-hover" id="database" style="width:100%;">
+    <caption>
+        Database
+    </caption>
+    <thead>
+        <tr>
+            <td>
+            </td>
+            <td>
+                name
+            </td>
+            <td>
+                id
+            </td>
+            <td>
+                dayOfBirthday
+            </td>
+        </tr>
+    </thead>
+
+    <tbody id="main-people">
+        @if (Model.Item1 != null)
+            @foreach (var element in Model.Item1)
+            {
+                <tr>
+                    <td id="field-btn-delete" style="width:5%;">
+                        <button class="btn btn-danger btn-sm" type="submit" name="deleteMember" onclick="DeleteMember(this, @element.id)">Del</button>
+                    </td>
+                    <td id="field-fi" style="width: 30%;">
+                        @element.FI
+                    </td>
+                    <td id="field-id" style="width: 20%;">
+                        @element.id
+                    </td>
+                    <td id="field-birthday" style="width: 30%;">
+                        @if (element.dayOfBirthday != null)
+                        {
+                            @element.dayOfBirthday
+                        }
+                    </td>
+                    <td id="field-btn-edit" align="center" style="width: 15%;">
+                        <button class="btn btn-default" id="btn-edit" onclick="EditBirthday(this, @element.id)"><i class='far fa-edit'></i></button>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+<button class="btn btn-danger" onclick="ClearAll()"> Clear all</button>
+
+
+
+<hr />
+@using (Html.BeginForm("Logout", "Home", FormMethod.Post))
+{
+    <input class="btn btn-danger" type="submit" value="Logout" />
+}
+
+<script src="~/js/Database.js"></script>
